@@ -702,6 +702,7 @@ cdef class cscQ(ClassificationCriterion):
 
         cdef SIZE_t* n_classes = self.n_classes
         cdef SIZE_t n_node_samples = self.n_node_samples # Number of samples in the node (end-start)
+        cdef double nns = self.n_node_samples # Number of samples in the node (end-start)
         cdef double* sum_total = self.sum_total
         cdef double Q = 0.0
         cdef double sq_count
@@ -715,7 +716,7 @@ cdef class cscQ(ClassificationCriterion):
                 count_k = sum_total[c]
                 sq_count += count_k * count_k
 
-            Q += (double)(n_node_samples * n_node_samples) - sq_count
+            Q += (self.n_outputs * nns * nns) - sq_count
             
             sum_total += self.sum_stride
 
@@ -763,9 +764,9 @@ cdef class cscQ(ClassificationCriterion):
                 sq_count_right += count_k * count_k
 
 
-            Q_left += true_sum_right * true_sum_right - sq_count_right
+            Q_left += self.n_outputs * true_sum_right * true_sum_right - sq_count_right
 
-            Q_right += true_sum_right * true_sum_right - sq_count_right
+            Q_right += self.n_outputs * true_sum_right * true_sum_right - sq_count_right
 
             sum_left += self.sum_stride
             sum_right += self.sum_stride
