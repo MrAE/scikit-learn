@@ -716,7 +716,7 @@ cdef class cscQ(ClassificationCriterion):
                 count_k = sum_total[c]
                 sq_count += count_k * count_k
 
-            Q += (self.n_outputs * nns * nns) - sq_count
+            Q += ((<double>c + 1.0) * nns * nns) - sq_count
             
             sum_total += self.sum_stride
 
@@ -750,6 +750,7 @@ cdef class cscQ(ClassificationCriterion):
         cdef SIZE_t k
         cdef SIZE_t c
 
+
         for k in range(self.n_outputs):
             sq_count_left = 0.0
             sq_count_right = 0.0
@@ -764,9 +765,9 @@ cdef class cscQ(ClassificationCriterion):
                 sq_count_right += count_k * count_k
 
 
-            Q_left += self.n_outputs * true_sum_right * true_sum_right - sq_count_right
+            Q_left += ((<double>c + 1.0) * true_sum_left * true_sum_left) - sq_count_left
 
-            Q_right += self.n_outputs * true_sum_right * true_sum_right - sq_count_right
+            Q_right += ((<double>c + 1.0) * true_sum_right * true_sum_right) - sq_count_right
 
             sum_left += self.sum_stride
             sum_right += self.sum_stride
